@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="battleship.battleship.BattleShipController" prefWidth="600" prefHeight="800">
+
+    <top>
+        <Label fx:id="gameStatus" text="Place your ships"/>
+    </top>
+
+    <center>
+        <VBox spacing="50" alignment="CENTER">
+            <!-- Enemy Board Area -->
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Enemy Board"/>
+                <BorderPane fx:id="enemyBoardArea"/>
+            </VBox>
+
+            <!-- Player Board Area -->
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Your Board"/>
+                <BorderPane fx:id="playerBoardArea"/>
+            </VBox>
+        </VBox>
+    </center>
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+</BorderPane>
