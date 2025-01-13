@@ -3,32 +3,32 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="battleship.battleship.BattleShipController" prefWidth="600" prefHeight="800">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="battleship.battleship.BattleShipController">
 
     <top>
-        <Label fx:id="gameStatus" text="Place your ships"/>
+        <VBox alignment="CENTER" spacing="10">
+            <Label fx:id="statusLabel" text="Game not started"/>
+            <Label fx:id="scoreLabel" text="Score - You: 0 | Enemy: 0"/>
+        </VBox>
     </top>
 
     <center>
-        <VBox spacing="50" alignment="CENTER">
+        <VBox spacing="20" alignment="CENTER">
             <!-- Enemy Board Area -->
-            <VBox alignment="CENTER" spacing="10">
-                <Label text="Enemy Board"/>
+            <VBox>
+                <Label text="Enemy Fleet"/>
                 <BorderPane fx:id="enemyBoardArea"/>
             </VBox>
 
             <!-- Player Board Area -->
-            <VBox alignment="CENTER" spacing="10">
-                <Label text="Your Board"/>
+            <VBox>
+                <Label text="Your Fleet"/>
                 <BorderPane fx:id="playerBoardArea"/>
             </VBox>
         </VBox>
     </center>
-
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
 
 </BorderPane>
