@@ -1,34 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="battleship.battleship.BattleShipController">
+<?import java.lang.String?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="battleship.battleship.BattleShipController"
+      spacing="20" alignment="CENTER">
 
-    <top>
-        <VBox alignment="CENTER" spacing="10">
-            <Label fx:id="statusLabel" text="Game not started"/>
-            <Label fx:id="scoreLabel" text="Score - You: 0 | Enemy: 0"/>
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <fx:define>
+        <String fx:id="defaultStyle" fx:value="-fx-background-color: #ADD8E6; -fx-min-width: 40; -fx-min-height: 40;"/>
+        <String fx:id="hitStyle" fx:value="-fx-background-color: #FF0000; -fx-min-width: 40; -fx-min-height: 40;"/>
+        <String fx:id="missStyle" fx:value="-fx-background-color: #FFFFFF; -fx-min-width: 40; -fx-min-height: 40;"/>
+        <String fx:id="shipStyle" fx:value="-fx-background-color: #808080; -fx-min-width: 40; -fx-min-height: 40;"/>
+    </fx:define>
+
+    <Label fx:id="gameStatus" style="-fx-font-size: 16px;"/>
+
+    <HBox spacing="50" alignment="CENTER">
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Your Board (Player 1)" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Label text="Place your ships here" style="-fx-font-size: 14px;"/>
+            <GridPane fx:id="player1Board" hgap="2" vgap="2"/>
         </VBox>
-    </top>
 
-    <center>
-        <VBox spacing="20" alignment="CENTER">
-            <!-- Enemy Board Area -->
-            <VBox>
-                <Label text="Enemy Fleet"/>
-                <BorderPane fx:id="enemyBoardArea"/>
-            </VBox>
-
-            <!-- Player Board Area -->
-            <VBox>
-                <Label text="Your Fleet"/>
-                <BorderPane fx:id="playerBoardArea"/>
-            </VBox>
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Opponent's Board (Player 2)" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Label text="Click here to attack" style="-fx-font-size: 14px;"/>
+            <GridPane fx:id="player2Board" hgap="2" vgap="2"/>
         </VBox>
-    </center>
+    </HBox>
 
-</BorderPane>
+    <HBox spacing="20" alignment="CENTER">
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Available Ships:" style="-fx-font-size: 14px;"/>
+            <Button text="Carrier (5)" onAction="#selectCarrier"/>
+            <Button text="Battleship (4)" onAction="#selectBattleship"/>
+            <Button text="Cruiser (3)" onAction="#selectCruiser"/>
+            <Button text="Submarine (3)" onAction="#selectSubmarine"/>
+            <Button text="Destroyer (2)" onAction="#selectDestroyer"/>
+        </VBox>
+
+        <VBox spacing="10" alignment="CENTER">
+            <Button text="Rotate Ship" onAction="#rotateShip"/>
+            <Button text="Reset Board" onAction="#handleNewGame"/>
+            <Button text="Start Game" onAction="#startGame"/>
+        </VBox>
+    </HBox>
+
+</VBox>

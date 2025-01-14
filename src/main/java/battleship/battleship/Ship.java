@@ -1,34 +1,52 @@
 package battleship.battleship;
 
-import javafx.scene.Parent;
+/**
+ * This class represents a ship in the Battleship game
+ * It tracks the ship's length and damage status
+ */
+public class Ship {
+    // Ship properties
+    private int length;
+    private int hitCount;
 
-public class Ship extends Parent {
-    public int type;
-    public boolean vertical = true;
-
-    private int health;
-
-    public Ship(int type, boolean vertical) {
-        this.type = type;
-        this.vertical = vertical;
-        health = type;
-
-        /*VBox vbox = new VBox();
-        for (int i = 0; i < type; i++) {
-            Rectangle square = new Rectangle(30, 30);
-            square.setFill(null);
-            square.setStroke(Color.BLACK);
-            vbox.getChildren().add(square);
-        }
-
-        getChildren().add(vbox);*/
+    /**
+     * Creates a new ship with the specified length
+     */
+    public Ship(int length) {
+        this.length = length;
+        this.hitCount = 0;
     }
 
+    /**
+     * Records a hit on this ship
+     */
     public void hit() {
-        health--;
+        if (this.hitCount < this.length) {
+            this.hitCount = this.hitCount + 1;
+        }
     }
 
-    public boolean isAlive() {
-        return health > 0;
+    /**
+     * Checks if the ship has been sunk
+     * Returns: true if hit count equals ship length, false otherwise
+     */
+    public boolean isSunk() {
+        return this.hitCount == this.length;
+    }
+
+    /**
+     * Gets the length of the ship
+     * Returns: the ship's length
+     */
+    public int getLength() {
+        return this.length;
+    }
+
+    /**
+     * Gets the number of hits on this ship
+     * Returns: the number of hits taken
+     */
+    public int getHitCount() {
+        return this.hitCount;
     }
 }

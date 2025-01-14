@@ -1,191 +1,224 @@
 package battleship.battleship;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
-import javafx.application.Platform;
-import java.util.Optional;
-import java.util.Random;
+import javafx.scene.layout.GridPane;
 
+/**
+ * This class controls the game interface and handles user interactions
+ */
 public class BattleShipController {
+    @FXML
+    private GridPane player1Board;
 
     @FXML
-    private Label statusLabel;
+    private GridPane player2Board;
 
     @FXML
-    private Label scoreLabel; // Yeni eklendi
+    private Label gameStatus;
 
     @FXML
-    private BorderPane enemyBoardArea;
+    private String defaultStyle;
 
     @FXML
-    private BorderPane playerBoardArea;
+    private String hitStyle;
 
-    private boolean running = false;
-    private Board enemyBoard, playerBoard;
-    private int shipsToPlace = 5;
-    private boolean enemyTurn = false;
-    private Random random = new Random();
+    @FXML
+    private String missStyle;
 
-    // Skor değişkenleri
-    private int playerScore = 0;
-    private int enemyScore = 0;
-    private static final int HIT_POINTS = 10;  // Her isabetli vuruş için 10 puan
-    private static final int MISS_PENALTY = -2; // Her ıskalama için -2 puan
+    @FXML
+    private String shipStyle;
 
+    private Game game;
+    private static final int BOARD_SIZE = 10;
+    private Button[][] player1Buttons;
+    private Button[][] player2Buttons;
+    private int selectedShipLength;
+    private boolean isHorizontal;
+    private boolean isPlacingShips;
+
+    /**
+     * Initializes the game board when the application starts
+     */
     @FXML
     public void initialize() {
-        showWelcomeMessage();
-        updateScore(); // Başlangıç skorunu göster
+        isPlacingShips = true;
+        isHorizontal = true;
+        setupBoards();
+        gameStatus.setText("Select a ship to place on your board");
     }
 
-    private void updateScore() {
-        scoreLabel.setText(String.format("Score - You: %d | Enemy: %d", playerScore, enemyScore));
-    }
+    /**
+     * Creates and sets up both player boards
+     */
+    private void setupBoards() {
+        player1Buttons = new Button[BOARD_SIZE][BOARD_SIZE];
+        player2Buttons = new Button[BOARD_SIZE][BOARD_SIZE];
 
-    private void setupGame() {
-        // Create enemy board
-        enemyBoard = new Board(true, event -> {
-            if (!running)
-                return;
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                player1Buttons[i][j] = createButton(i, j, true);
+                player1Board.add(player1Buttons[i][j], j, i);
 
-            Board.Cell cell = (Board.Cell) event.getSource();
-            if (cell.wasShot)
-                return;
-
-            enemyTurn = !cell.shoot();
-
-            // Oyuncu vuruş sonucu
-            if (!enemyTurn) {
-                playerScore += HIT_POINTS;  // İsabet
-            } else {
-                playerScore += MISS_PENALTY; // Karavana
-            }
-            updateScore();
-
-            if (enemyBoard.ships == 0) {
-                playerScore += 50; // Oyunu kazanma bonusu
-                updateScore();
-                showGameEndAlert(true);
-                return;
-            }
-
-            if (enemyTurn)
-                enemyMove();
-        });
-
-        // Create player board
-        playerBoard = new Board(false, event -> {
-            if (running)
-                return;
-
-            Board.Cell cell = (Board.Cell) event.getSource();
-            if (playerBoard.placeShip(new Ship(shipsToPlace, event.getButton() == MouseButton.PRIMARY),
-                    cell.x, cell.y)) {
-                if (--shipsToPlace == 0) {
-                    startGame();
-                }
-            }
-        });
-
-        enemyBoardArea.setCenter(enemyBoard);
-        playerBoardArea.setCenter(playerBoard);
-    }
-
-    private void enemyMove() {
-        while (enemyTurn) {
-            int x = random.nextInt(10);
-            int y = random.nextInt(10);
-
-            Board.Cell cell = playerBoard.getCell(x, y);
-            if (cell.wasShot)
-                continue;
-
-            enemyTurn = cell.shoot();
-
-            // Düşman vuruş sonucu
-            if (enemyTurn) {
-                enemyScore += HIT_POINTS;  // İsabet
-            } else {
-                enemyScore += MISS_PENALTY; // Karavana
-            }
-            updateScore();
-
-            if (playerBoard.ships == 0) {
-                enemyScore += 50; // Oyunu kazanma bonusu
-                updateScore();
-                showGameEndAlert(false);
-                return;
+                player2Buttons[i][j] = createButton(i, j, false);
+                player2Board.add(player2Buttons[i][j], j, i);
             }
         }
     }
 
-    private void resetGame() {
-        // Oyun değişkenlerini sıfırla
-        running = false;
-        shipsToPlace = 5;
-        enemyTurn = false;
-        playerScore = 0;  // Skorları sıfırla
-        enemyScore = 0;
+    private Button createButton(int row, int col, boolean isPlayer1) {
+        Button button = new Button();
+        button.setStyle(defaultStyle);
 
-        // Tahtaları temizle
-        enemyBoardArea.getChildren().clear();
-        playerBoardArea.getChildren().clear();
-
-        updateScore();  // Skor göstergesini güncelle
-        showWelcomeMessage();
-    }
-
-    private void showWelcomeMessage() {
-        Alert welcome = new Alert(AlertType.INFORMATION);
-        welcome.setTitle("Welcome");
-        welcome.setHeaderText("Welcome to Battleship!");
-        welcome.setContentText("Place your 5 ships on the board to start the game.\nCurrent High Score: " + playerScore);
-        welcome.showAndWait();
-        setupGame();
-        statusLabel.setText("Place your ships");
-    }
-
-    private void startGame() {
-        // Place enemy ships
-        int type = 5;
-
-        while (type > 0) {
-            int x = random.nextInt(10);
-            int y = random.nextInt(10);
-
-            if (enemyBoard.placeShip(new Ship(type, Math.random() < 0.5), x, y)) {
-                type--;
-            }
-        }
-
-        running = true;
-        statusLabel.setText("Game Started - Your turn");
-
-        Alert gameStart = new Alert(AlertType.INFORMATION);
-        gameStart.setTitle("Game Started");
-        gameStart.setHeaderText("All ships are placed!");
-        gameStart.setContentText("The game has started. Good luck!\nTry to beat the high score: " + playerScore);
-        gameStart.show();
-    }
-
-    private void showGameEndAlert(boolean playerWon) {
-        running = false;
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Game Over");
-        String scoreMessage = String.format("\nFinal Score:\nYou: %d\nEnemy: %d", playerScore, enemyScore);
-        alert.setHeaderText((playerWon ? "Congratulations! You Won!" : "Game Over! You Lost!") + scoreMessage);
-        alert.setContentText("Would you like to play again?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            resetGame();
+        if (isPlayer1 == true) {
+            button.setOnAction(event -> handleShipPlacement(row, col));
         } else {
-            Platform.exit();
+            button.setOnAction(event -> makeMove(row, col));
         }
+
+        return button;
+    }
+
+    private void handleShipPlacement(int row, int col) {
+        if (isPlacingShips == true && selectedShipLength > 0) {
+            if (isValidPlacement(row, col) == true) {
+                boolean placed = game.placeShip(row, col, selectedShipLength, isHorizontal, game.getCurrentPlayer());
+
+                if (placed == true) {
+                    updateShipDisplay(row, col);
+                    selectedShipLength = 0;
+                    gameStatus.setText("Ship placed successfully!");
+                } else {
+                    gameStatus.setText("Invalid placement. Try again.");
+                }
+            } else {
+                gameStatus.setText("Ship would be out of bounds. Try again.");
+            }
+        }
+    }
+
+    private boolean isValidPlacement(int row, int col) {
+        if (isHorizontal == true) {
+            return col + selectedShipLength <= BOARD_SIZE;
+        } else {
+            return row + selectedShipLength <= BOARD_SIZE;
+        }
+    }
+
+    private void updateShipDisplay(int row, int col) {
+        if (isHorizontal == true) {
+            for (int i = 0; i < selectedShipLength; i++) {
+                player1Buttons[row][col + i].setStyle(shipStyle);
+            }
+        } else {
+            for (int i = 0; i < selectedShipLength; i++) {
+                player1Buttons[row + i][col].setStyle(shipStyle);
+            }
+        }
+    }
+
+    private void makeMove(int row, int col) {
+        if (game.isGameInProgress() == true) {
+            boolean isHit = game.makeMove(row, col);
+
+            if (isHit == true) {
+                player2Buttons[row][col].setStyle(hitStyle);
+                gameStatus.setText("Hit!");
+            } else {
+                player2Buttons[row][col].setStyle(missStyle);
+                gameStatus.setText("Miss!");
+            }
+
+            if (game.isGameOver() == true) {
+                gameStatus.setText("Game Over! " + game.getWinner() + " wins!");
+            }
+        }
+    }
+
+    @FXML
+    private void handleNewGame() {
+        game = new Game();
+        resetBoards();
+        isPlacingShips = true;
+        isHorizontal = true;
+        gameStatus.setText("Select a ship to place on your board");
+    }
+
+    private void resetBoards() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                player1Buttons[i][j].setStyle(defaultStyle);
+                player2Buttons[i][j].setStyle(defaultStyle);
+            }
+        }
+    }
+
+    @FXML
+    private void selectCarrier() {
+        selectedShipLength = 5;
+        gameStatus.setText("Place your Carrier (length: 5)");
+    }
+
+    @FXML
+    private void selectBattleship() {
+        selectedShipLength = 4;
+        gameStatus.setText("Place your Battleship (length: 4)");
+    }
+
+    @FXML
+    private void selectCruiser() {
+        selectedShipLength = 3;
+        gameStatus.setText("Place your Cruiser (length: 3)");
+    }
+
+    @FXML
+    private void selectSubmarine() {
+        selectedShipLength = 3;
+        gameStatus.setText("Place your Submarine (length: 3)");
+    }
+
+    @FXML
+    private void selectDestroyer() {
+        selectedShipLength = 2;
+        gameStatus.setText("Place your Destroyer (length: 2)");
+    }
+
+    @FXML
+    private void rotateShip() {
+        isHorizontal = !isHorizontal;
+        String orientation = isHorizontal ? "horizontal" : "vertical";
+        gameStatus.setText("Ship orientation changed to " + orientation);
+    }
+
+    @FXML
+    private void startGame() {
+        if (game.isPlacingShips() == false) {
+            isPlacingShips = false;
+            placeComputerShips();
+            game.setGameInProgress(true);
+            gameStatus.setText("Game started! Make your move.");
+        } else {
+            gameStatus.setText("Please place all your ships first!");
+        }
+    }
+
+    private void placeComputerShips() {
+        int[] shipLengths = {5, 4, 3, 3, 2};
+
+        for (int length : shipLengths) {
+            boolean placed = false;
+            while (placed == false) {
+                int row = (int)(Math.random() * BOARD_SIZE);
+                int col = (int)(Math.random() * BOARD_SIZE);
+                boolean horizontal = Math.random() < 0.5;
+
+                placed = game.placeShip(row, col, length, horizontal, game.getPlayer2());
+            }
+        }
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }
