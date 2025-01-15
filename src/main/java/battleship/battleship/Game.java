@@ -29,6 +29,9 @@ public class Game {
     public Game() {
         initializeGame();
     }
+    public Board getPlayer2Board(){
+        return player2Board;
+    }
 
     /**
      * Initializes the game by creating new boards and setting initial states

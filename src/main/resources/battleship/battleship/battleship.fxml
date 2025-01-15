@@ -40,11 +40,11 @@
     <HBox spacing="20" alignment="CENTER">
         <VBox spacing="10" alignment="CENTER">
             <Label text="Available Ships:" style="-fx-font-size: 14px;"/>
-            <Button text="Carrier (5)" onAction="#selectCarrier"/>
-            <Button text="Battleship (4)" onAction="#selectBattleship"/>
-            <Button text="Cruiser (3)" onAction="#selectCruiser"/>
-            <Button text="Submarine (3)" onAction="#selectSubmarine"/>
-            <Button text="Destroyer (2)" onAction="#selectDestroyer"/>
+            <Button fx:id="carrierButton" text="Carrier (5)" onAction="#selectCarrier"/>
+            <Button fx:id="battleshipButton" text="Battleship (4)" onAction="#selectBattleship"/>
+            <Button fx:id="cruiserButton" text="Cruiser (3)" onAction="#selectCruiser"/>
+            <Button fx:id="submarineButton" text="Submarine (3)" onAction="#selectSubmarine"/>
+            <Button fx:id="destroyerButton" text="Destroyer (2)" onAction="#selectDestroyer"/>
         </VBox>
 
         <VBox spacing="10" alignment="CENTER">

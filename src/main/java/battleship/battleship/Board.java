@@ -97,7 +97,15 @@ public class Board {
      * Returns: true if all ships are sunk, false otherwise
      */
     public boolean areAllShipsSunk() {
-        return totalShipsPlaced > 0 && totalShipsSunk == totalShipsPlaced;
+        int sunkCount = 0;
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (ships[i][j] != null && ships[i][j].isSunk() == true) {
+                    sunkCount++;
+                }
+            }
+        }
+        return totalShipsPlaced > 0 && sunkCount == totalShipsPlaced;
     }
 
     /**
