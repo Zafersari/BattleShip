@@ -256,14 +256,14 @@ gravity = -25f;     // More negative = fall faster
 
 ## 🎯 Roadmap
 
-- [ ] Game state management (start, game over, restart)
-- [ ] Score system with persistent high scores
-- [ ] Power-ups (double jump, slow motion, magnet)
-- [ ] Multiple biomes with different color palettes
-- [ ] Leaderboards (online multiplayer)
-- [ ] Sound design and music integration
-- [ ] Particle effects for platform interaction
-- [ ] Tutorial system for first-time players
+- [x] Game state management (start, game over, restart)
+- [x] Score system with persistent high scores
+- [x] Power-ups (double jump, slow motion, magnet)
+- [x] Multiple biomes with different color palettes
+- [x] Leaderboards (online multiplayer)
+- [x] Sound design and music integration
+- [x] Particle effects for platform interaction
+- [x] Tutorial system for first-time players
 
 ---
 
