@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace SkywardZen.Tutorial
 
         [Header("UI References")]
         [SerializeField] private GameObject tutorialPanel;
-        [SerializeField] private TMPro.TextMeshProUGUI tutorialText;
+        [SerializeField] private Text tutorialText;
         [SerializeField] private GameObject tutorialArrow;
 
         [Header("Events")]
