@@ -54,7 +54,7 @@ namespace SkywardZen.VFX
         /// <summary>
         /// Play landing particle effect
         /// </summary>
-        public void PlayLandingEffect(Vector3 position, PowerUps.PlatformType platformType = PowerUps.PlatformType.Static)
+        public void PlayLandingEffect(Vector3 position, Core.PlatformType platformType = Core.PlatformType.Static)
         {
             Color effectColor = GetColorForPlatform(platformType);
             PlayEffect(ParticleEffectType.Landing, position, effectColor);
@@ -229,13 +229,13 @@ namespace SkywardZen.VFX
         /// <summary>
         /// Get color based on platform type
         /// </summary>
-        private Color GetColorForPlatform(PowerUps.PlatformType platformType)
+        private Color GetColorForPlatform(Core.PlatformType platformType)
         {
             switch (platformType)
             {
-                case PowerUps.PlatformType.Moving:
+                case Core.PlatformType.Moving:
                     return movingPlatformColor;
-                case PowerUps.PlatformType.Crumbling:
+                case Core.PlatformType.Crumbling:
                     return crumblingPlatformColor;
                 default:
                     return defaultLandingColor;
